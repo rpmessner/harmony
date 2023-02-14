@@ -72,7 +72,7 @@ defmodule Harmony.Util do
   def set_num_to_chroma(num),
     do: Integer.to_string(num, 2) |> String.pad_leading(12, "0")
 
-  defp rotate(times, list) do
+  def rotate(times, list) do
     len = Enum.count(list)
     n = rem(rem(times, len) + len, len)
 

@@ -119,6 +119,10 @@ defmodule Harmony.Pitch.ClassSet do
   def chroma(pcs), do: get(pcs).chroma
   def intervals(pcs), do: get(pcs).intervals
 
+  @regex ~r/^[01]{12}$/
+
+  def is_chroma(ch), do: Regex.match?(@regex, ch)
+
   def is_note_included_in(set) when is_binary(set) or is_list(set),
     do: set |> get() |> is_note_included_in()
 

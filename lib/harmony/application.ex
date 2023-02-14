@@ -3,7 +3,8 @@ defmodule Harmony.Application do
 
   def start(_type, _args) do
     children = [
-      {Harmony.Scale.Name, nil}
+      {Harmony.Scale.Name, nil},
+      {Harmony.Chord.Name, nil}
     ]
 
     opts = [strategy: :one_for_one, name: Harmony.Supervisor]

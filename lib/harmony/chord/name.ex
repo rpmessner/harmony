@@ -1,16 +1,17 @@
-defmodule Harmony.Scale.Name do
+defmodule Harmony.Chord.Name do
   alias __MODULE__
-  alias Harmony.Scale.Data
+  alias Harmony.Chord.Data
   alias Harmony.Pitch.ClassSet
 
   use GenServer
 
   defstruct(
     empty: true,
-    name: "",
     set_num: 0,
     chroma: "000000000000",
     normalized: "000000000000",
+    name: "",
+    quality: "",
     intervals: [],
     aliases: []
   )
@@ -42,6 +43,14 @@ defmodule Harmony.Scale.Name do
 
   def keys() do
     GenServer.call(@me, {:keys})
+  end
+
+  def names() do
+    GenServer.call(@me, {:names})
+  end
+
+  def symbols() do
+    GenServer.call(@me, {:symbols})
   end
 
   def add(intervals, name, aliases \\ []) do
@@ -76,6 +85,20 @@ defmodule Harmony.Scale.Name do
     {:reply, Map.get(s.index, name, %Name{}), s}
   end
 
+  def handle_call({:names}, _from, %State{} = s) do
+    names = s.dictionary |> Enum.map(& &1.name) |> Enum.filter(&(&1 != ""))
+    {:reply, names, s}
+  end
+
+  def handle_call({:symbols}, _from, %State{} = s) do
+    symbols =
+      s.dictionary
+      |> Enum.map(&(&1.aliases |> List.first()))
+      |> Enum.filter(&(!(&1 in ["", nil])))
+
+    {:reply, symbols, s}
+  end
+
   def handle_call({:keys}, _from, %State{} = s) do
     {:reply, Map.keys(s.index), s}
   end
@@ -88,7 +111,19 @@ defmodule Harmony.Scale.Name do
     {:reply, nil, %State{}}
   end
 
-  defp do_add(%State{} = s, intervals, name, aliases) do
+  def quality(intervals) do
+    cond do
+      "5A" in intervals -> "Augmented"
+      "3M" in intervals -> "Major"
+      "5d" in intervals -> "Diminished"
+      "3m" in intervals -> "Minor"
+      true -> "Unknown"
+    end
+  end
+
+  def do_add(%State{} = s, intervals, name, aliases) do
+    quality = quality(intervals)
+
     %{set_num: sn, chroma: ch, normalized: nrm} = ClassSet.get(intervals)
 
     entry = %Name{
@@ -98,12 +133,15 @@ defmodule Harmony.Scale.Name do
       chroma: ch,
       normalized: nrm,
       intervals: intervals,
-      aliases: aliases
+      aliases: aliases,
+      quality: quality
     }
+
+    dictionary = [entry | s.dictionary] |> Enum.sort_by(& &1.set_num)
 
     %State{
       index: index_entry(s.index, entry, aliases),
-      dictionary: [entry | s.dictionary]
+      dictionary: dictionary
     }
   end
 

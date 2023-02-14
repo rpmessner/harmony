@@ -1,22 +1,24 @@
 defmodule Harmony.Scale.NameTest do
-  alias Harmony.Scale.Name
+  use ExUnit.Case, async: true
+
+  alias Harmony.Scale.Name, as: Subject
   alias Harmony.Pitch.ClassSet
 
-  use ExUnit.Case
+  doctest Subject
 
   setup _ do
-    Name.reset()
+    Subject.reset()
     :ok
   end
 
   test "list names" do
-    assert 92 = Enum.count(Name.all())
+    assert 92 = Enum.count(Subject.all())
     # sorted
-    assert "major pentatonic" = List.first(Name.all()).name
+    assert "major pentatonic" = List.first(Subject.all()).name
   end
 
   test "get" do
-    assert %Name{
+    assert %Subject{
              empty: false,
              set_num: 2773,
              name: "major",
@@ -24,11 +26,11 @@ defmodule Harmony.Scale.NameTest do
              aliases: ~w(ionian),
              chroma: "101011010101",
              normalized: "101010110101"
-           } = Name.get("major")
+           } = Subject.get("major")
   end
 
   test "not valid get type" do
-    assert %Name{
+    assert %Subject{
              empty: true,
              name: "",
              set_num: 0,
@@ -36,28 +38,28 @@ defmodule Harmony.Scale.NameTest do
              chroma: "000000000000",
              intervals: [],
              normalized: "000000000000"
-           } = Name.get("unknown")
+           } = Subject.get("unknown")
   end
 
   test "add a chord type" do
-    Name.add(~w(1P 5P), "quinta")
+    Subject.add(~w(1P 5P), "quinta")
 
     assert %{
              chroma: "100000010000"
-           } = Name.get("quinta")
+           } = Subject.get("quinta")
 
-    Name.add(~w(1P 5P), "quinta", ~w(q Q))
+    Subject.add(~w(1P 5P), "quinta", ~w(q Q))
 
-    quinta = Name.get("quinta")
+    quinta = Subject.get("quinta")
 
-    assert ^quinta = Name.get("q")
-    assert ^quinta = Name.get("Q")
+    assert ^quinta = Subject.get("q")
+    assert ^quinta = Subject.get("Q")
   end
 
   test "major modes" do
-    chromas = ClassSet.modes(Name.get("major").intervals, true)
+    chromas = ClassSet.modes(Subject.get("major").intervals, true)
 
-    names = Enum.map(chromas, &Name.get(&1).name)
+    names = Enum.map(chromas, &Subject.get(&1).name)
 
     assert [
              "major",
@@ -71,9 +73,9 @@ defmodule Harmony.Scale.NameTest do
   end
 
   test "harmonic minor modes" do
-    chromas = ClassSet.modes(Name.get("harmonic minor").intervals, true)
+    chromas = ClassSet.modes(Subject.get("harmonic minor").intervals, true)
 
-    names = chromas |> Enum.map(&Name.get(&1).name)
+    names = chromas |> Enum.map(&Subject.get(&1).name)
 
     assert [
              "harmonic minor",
@@ -87,9 +89,9 @@ defmodule Harmony.Scale.NameTest do
   end
 
   test "melodic minor modes" do
-    chromas = ClassSet.modes(Name.get("melodic minor").intervals, true)
+    chromas = ClassSet.modes(Subject.get("melodic minor").intervals, true)
 
-    names = chromas |> Enum.map(&Name.get(&1).name)
+    names = chromas |> Enum.map(&Subject.get(&1).name)
 
     assert [
              "melodic minor",
@@ -103,9 +105,9 @@ defmodule Harmony.Scale.NameTest do
   end
 
   test "clear dictionary" do
-    Name.clear()
+    Subject.clear()
 
-    assert [] = Name.all()
-    assert [] = Name.keys()
+    assert [] = Subject.all()
+    assert [] = Subject.keys()
   end
 end

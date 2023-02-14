@@ -3,7 +3,7 @@ defmodule Harmony.Note.Macros do
 
   @letters ~w(A B C D E F G)
   @accidentals ~w(bbb ### bb ## b # x) ++ [""]
-  @octaves [nil] ++ Enum.to_list(-1..9)
+  @octaves [nil] ++ Enum.to_list(-1..10)
   @notes List.flatten(
            for acc <- @accidentals do
              for note <- @letters do
@@ -215,4 +215,13 @@ defmodule Harmony.Note do
     dest_oct = src.oct + dest_oct_offset
     "#{dest.pc}#{dest_oct}"
   end
+
+  @noteregex ~r/^([a-gA-G]?)(\#{1,}|b{1,}|x{1,}|)(-?\d*)\s*(.*)$/
+
+  def tokenize(str) when is_binary(str) do
+    [[_, m1, m2, m3, m4]] = Regex.scan(@noteregex, str)
+    [String.upcase(m1), String.replace(m2, ~r/x/, "##"), m3, m4]
+  end
+
+  def tokenize(_), do: ["", "", "", ""]
 end

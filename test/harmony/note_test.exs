@@ -89,4 +89,14 @@ defmodule Harmony.NoteTest do
     assert "B#1" = Note.enharmonic("C2", "B#")
     assert "" = Note.enharmonic("F2", "Eb")
   end
+
+  test "tokenize" do
+    assert ["C", "bb", "5", "major"] = Note.tokenize("Cbb5 major")
+    assert ["A", "##", "", ""] = Note.tokenize("Ax")
+    assert ["C", "", "", "M"] = Note.tokenize("CM")
+    assert ["", "", "", "maj7"] = Note.tokenize("maj7")
+    assert ["", "", "", ""] = Note.tokenize("")
+    assert ["B", "b", "", ""] = Note.tokenize("bb")
+    assert ["", "##", "", ""] = Note.tokenize("##")
+  end
 end
