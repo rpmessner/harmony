@@ -4,7 +4,7 @@ defmodule Harmony.Chord.Data do
     {~w(1P 3M 5P 7M), "major seventh", ["maj7", "Δ", "ma7", "M7", "Maj7", "^7"]},
     {~w(1P 3M 5P 7M 9M), "major ninth", ["maj9", "Δ9", "^9"]},
     {~w(1P 3M 5P 7M 9M 13M), "major thirteenth", ["maj13", "Maj13", "^13"]},
-    {~w(1P 3M 5P 6M), "sixth", ["6", "add6", "add13", "M6"]},
+    {~w(1P 3M 5P 6M), "sixth", ["6", "add6", "add13", "M6", "Maj6", "maj6"]},
     {~w(1P 3M 5P 6M 9M), "sixth/ninth", ["6/9", "69", "M69"]},
     {~w(1P 3M 6m 7M), "major seventh flat sixth", ["M7b6", "^7b6"]},
     {~w(1P 3M 5P 7M 11A), "major seventh sharp eleventh",

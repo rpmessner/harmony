@@ -3,11 +3,18 @@ defmodule Harmony.Pitch do
   alias Harmony.Util
 
   defstruct(
-    step: nil,
-    alt: nil,
+    step: 0,
+    alt: 0,
     oct: nil,
     dir: nil
   )
+
+  @type t :: %Pitch{
+    step: integer(),
+    alt: integer(),
+    oct: integer() | nil,
+    dir: integer() | nil
+  }
 
   @types ~w(P M M P P M M)
   @fifths [0, 2, 4, -1, 1, 3, 5]
@@ -80,7 +87,7 @@ defmodule Harmony.Pitch do
   end
 
   def get([f, o]) do
-    %{step: step, alt: alt} = get(f)
+    %{step: step, alt: alt} = get([f])
     oct = o + 4 * alt + Enum.at(@steps_to_octs, step)
     %Pitch{step: step, alt: alt, oct: oct}
   end

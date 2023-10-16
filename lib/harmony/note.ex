@@ -102,24 +102,44 @@ defmodule Harmony.Note do
 
   defstruct(
     acc: "",
-    alt: nil,
-    chroma: nil,
-    coord: nil,
+    alt: 0,
+    chroma: 0,
+    coord: [0, 0],
     empty: true,
-    freq: nil,
-    height: nil,
-    letter: nil,
-    midi: nil,
+    freq: 0,
+    height: 0,
+    letter: "",
+    midi: 0,
     name: "",
     note: "",
-    oct: nil,
+    oct: 0,
     pc: "",
     simple: "",
-    step: nil
+    step: 0
   )
+
+  @type t :: %Note{
+    empty: boolean,
+    alt: integer(),
+    acc: String.t(),
+    chroma: integer(),
+    coord: list(integer()),
+    freq: float(),
+    height: integer(),
+    letter: String.t(),
+    midi: integer(),
+    name: String.t(),
+    note: String.t(),
+    oct: integer(),
+    pc: String.t(),
+    simple: String.t(),
+    step: integer()
+  }
 
   require Macros
   Macros.note_defs()
+
+  @spec get(Note.t() | Pitch.t() | String.t() | atom()) :: Note.t()
 
   def get(%Note{} = n), do: n
   def get(%Pitch{} = p), do: p |> Pitch.note_name() |> get()
