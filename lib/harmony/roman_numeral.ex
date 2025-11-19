@@ -81,6 +81,20 @@ defmodule Harmony.RomanNumeral do
     dir: nil
   )
 
+  @type t :: %RomanNumeral{
+          empty: boolean(),
+          name: String.t(),
+          roman: String.t(),
+          interval: String.t(),
+          acc: String.t(),
+          chord_type: String.t(),
+          major: boolean(),
+          step: integer() | nil,
+          alt: integer() | nil,
+          oct: integer() | nil,
+          dir: integer() | nil
+        }
+
   require Macros
   Macros.roman_numeral_defs()
 
