@@ -14,6 +14,7 @@ defmodule Harmony.MixProject do
       description: description(),
       package: package(),
       docs: docs(),
+      dialyzer: dialyzer(),
       name: "Harmony",
       source_url: @source_url
     ]
@@ -30,8 +31,8 @@ defmodule Harmony.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.31", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false}
+      {:ex_doc, "~> 0.31", only: [:dev, :docs], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -73,6 +74,13 @@ defmodule Harmony.MixProject do
       groups_for_extras: [
         Guides: ~r/docs\/.*/
       ]
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+      plt_add_apps: [:mix]
     ]
   end
 end

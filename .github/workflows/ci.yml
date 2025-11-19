@@ -104,6 +104,9 @@ jobs:
     name: Documentation
     runs-on: ubuntu-latest
 
+    env:
+      MIX_ENV: docs
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
