@@ -47,6 +47,20 @@ defmodule Harmony.Scale do
     normalized: "000000000000"
   )
 
+  @type t :: %Scale{
+          empty: boolean(),
+          tonic: String.t(),
+          notes: list(String.t()),
+          type: String.t(),
+          name: String.t(),
+          intervals: list(String.t()),
+          aliases: list(String.t()),
+          set_num: integer(),
+          chroma: String.t(),
+          normalized: String.t()
+        }
+
+  @spec tokenize(String.t()) :: list(String.t())
   def tokenize(name) do
     i = name |> String.graphemes() |> Enum.find_index(&(&1 == " "))
 
@@ -65,12 +79,14 @@ defmodule Harmony.Scale do
     end
   end
 
+  @spec get(String.t()) :: Scale.t()
   def get(name) when is_binary(name) do
     apply(__MODULE__, :get, name |> tokenize() |> Enum.reverse())
   end
 
   def get(""), do: %Scale{}
 
+  @spec get(String.t(), String.t()) :: Scale.t()
   def get(name, "") do
     scale_name = Name.get(name)
     do_get(scale_name)
@@ -121,6 +137,7 @@ defmodule Harmony.Scale do
     struct(Scale, opts)
   end
 
+  @spec chords(String.t()) :: list(String.t())
   def chords(name) do
     %{chroma: scale_chroma} = get(name)
 
@@ -131,6 +148,7 @@ defmodule Harmony.Scale do
     |> Enum.map(&(&1.aliases |> List.first()))
   end
 
+  @spec reduced(String.t()) :: list(String.t())
   def reduced(name) do
     if ClassSet.is_chroma(name) do
       reduced_from_chroma(name)
@@ -153,6 +171,7 @@ defmodule Harmony.Scale do
     |> Enum.map(& &1.name)
   end
 
+  @spec extended(String.t()) :: list(String.t())
   def extended(name) do
     if ClassSet.is_chroma(name) do
       extended_from_chroma(name)
@@ -175,6 +194,7 @@ defmodule Harmony.Scale do
     |> Enum.map(& &1.name)
   end
 
+  @spec notes(list(String.t())) :: list(String.t())
   def notes(note_names) when is_list(note_names) do
     pcset = note_names |> Enum.map(&Note.get(&1).pc) |> Enum.filter(&(&1 != ""))
     tonic = pcset |> List.first()
