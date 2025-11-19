@@ -248,7 +248,7 @@ defmodule Harmony.Scale do
         end
 
       case note do
-        %{height: nil} ->
+        %{empty: true} ->
           nil
 
         %{height: h, name: n} ->
@@ -269,15 +269,18 @@ defmodule Harmony.Scale do
     get_name = get_note_name_of(name)
 
     fn from_note, to_note ->
-      %{height: from} = Note.get(from_note)
-      %{height: to} = Note.get(to_note)
+      from_n = Note.get(from_note)
+      to_n = Note.get(to_note)
 
-      case {from, to} do
-        {f, t} when nil in [f, t] ->
+      case {from_n, to_n} do
+        {%{empty: true}, _} ->
           []
 
-        {f, t} ->
-          Collection.range(f, t)
+        {_, %{empty: true}} ->
+          []
+
+        {%{height: from}, %{height: to}} ->
+          Collection.range(from, to)
           |> Enum.map(&get_name.(&1))
           |> Enum.filter(&(!!&1))
       end
