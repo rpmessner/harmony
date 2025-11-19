@@ -203,9 +203,6 @@ defmodule Harmony.Interval do
         step = rem(7 - step, 7)
         alt = if type == "perfectable", do: -alt, else: -(alt + 1)
         Pitch.interval_name(%Pitch{step: step, alt: alt, oct: oct, dir: dir})
-
-      _ ->
-        ""
     end
   end
 
