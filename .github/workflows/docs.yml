@@ -49,14 +49,17 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        if: github.repository == 'rpmessner/harmony' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        if: github.repository == 'rpmessner/harmony' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
         with:
           path: 'doc'
 
   deploy:
     name: Deploy to GitHub Pages
+    if: github.repository == 'rpmessner/harmony' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

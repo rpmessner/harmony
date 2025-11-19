@@ -193,11 +193,11 @@ defmodule Harmony.Note do
   def from_midi(nil), do: %Note{}
 
   def from_freq(nil), do: %Note{}
-  def from_freq(0.0), do: %Note{}
+  def from_freq(freq) when freq == 0.0 or freq == -0.0, do: %Note{}
   def from_freq(freq), do: freq |> Util.freq_to_midi() |> from_midi()
 
   def from_freq_sharp(nil), do: %Note{}
-  def from_freq_sharp(0.0), do: %Note{}
+  def from_freq_sharp(freq) when freq == 0.0 or freq == -0.0, do: %Note{}
   def from_freq_sharp(freq), do: freq |> Util.freq_to_midi() |> from_midi_sharp()
 
   def from_coord(coord) when is_list(coord), do: coord |> Pitch.decode() |> get()
