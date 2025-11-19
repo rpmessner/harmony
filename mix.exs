@@ -1,8 +1,8 @@
 defmodule Harmony.MixProject do
   use Mix.Project
 
-  @version "0.1.0"
-  @source_url "https://github.com/ryanmessner/harmony"
+  @version "0.1.1"
+  @source_url "https://github.com/rpmessner/harmony"
 
   def project do
     [
