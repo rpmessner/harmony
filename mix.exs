@@ -15,6 +15,7 @@ defmodule Harmony.MixProject do
       package: package(),
       docs: docs(),
       dialyzer: dialyzer(),
+      test_coverage: test_coverage(),
       name: "Harmony",
       source_url: @source_url
     ]
@@ -81,6 +82,22 @@ defmodule Harmony.MixProject do
     [
       plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
       plt_add_apps: [:mix]
+    ]
+  end
+
+  defp test_coverage do
+    [
+      summary: [threshold: 85],
+      ignore_modules: [
+        # Macro modules - generate code at compile time, not runtime testable
+        Harmony.Note.Macros,
+        Harmony.Interval.Macros,
+        Harmony.RomanNumeral.Macros,
+        Harmony.Pitch.ClassSet.Macros,
+        # GenServer state modules - internal implementation details
+        Harmony.Chord.Name.State,
+        Harmony.Scale.Name.State
+      ]
     ]
   end
 end
