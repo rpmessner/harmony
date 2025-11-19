@@ -112,25 +112,57 @@ defmodule Harmony.Interval do
 
   Macros.interval_defs()
 
+  @type t :: %Interval{
+          alt: integer() | nil,
+          chroma: integer() | nil,
+          coord: list(integer()) | nil,
+          dir: integer() | nil,
+          empty: boolean(),
+          name: String.t(),
+          num: integer() | nil,
+          oct: integer() | nil,
+          q: String.t(),
+          semitones: integer() | nil,
+          simple: integer() | nil,
+          simplified: String.t() | nil,
+          step: integer() | nil,
+          type: String.t()
+        }
+
+  @spec get(RomanNumeral.t() | Interval.t() | Pitch.t() | String.t() | atom()) :: Interval.t()
   def get(%RomanNumeral{} = r), do: get(RomanNumeral.pitch(r))
   def get(%Interval{} = i), do: get(Interval.pitch(i))
   def get(%Pitch{} = p), do: p |> Pitch.interval_name() |> get()
   def get(_), do: %Interval{}
 
+  @spec pitch(Interval.t()) :: Pitch.t()
   def pitch(%Interval{} = i),
     do: %Pitch{alt: i.alt, oct: i.oct, step: i.step, dir: i.dir}
 
   @names ~w(1P 2M 3M 4P 5P 6m 7m)
+
+  @spec names() :: list(String.t())
   def names(), do: @names
 
+  @spec name(String.t()) :: String.t()
   def name(name) when is_binary(name), do: get(name).name
 
+  @spec num(String.t() | Interval.t()) :: integer() | nil
   def num(name), do: get(name).num
+
+  @spec quality(String.t() | Interval.t()) :: String.t()
   def quality(name), do: get(name).q
+
+  @spec semitones(String.t() | Interval.t()) :: integer() | nil
   def semitones(name), do: get(name).semitones
+
+  @spec simple(String.t() | Interval.t()) :: integer() | nil
   def simple(name), do: get(name).simple
+
+  @spec simplify(String.t() | Interval.t()) :: String.t() | nil
   def simplify(name), do: get(name).simplified
 
+  @spec distance(Note.t(), Note.t()) :: String.t()
   def distance(%Note{empty: true}, _), do: ""
   def distance(_, %Note{empty: true}), do: ""
 
@@ -155,10 +187,12 @@ defmodule Harmony.Interval do
     from_coord([fifths, octs], force_descending).name
   end
 
+  @spec distance(String.t(), String.t()) :: String.t()
   def distance(from, to) when is_binary(from) and is_binary(to) do
     distance(Note.get(from), Note.get(to))
   end
 
+  @spec invert(String.t() | Interval.t()) :: String.t()
   def invert(name) do
     case get(name) do
       %Interval{empty: true} ->
@@ -175,7 +209,10 @@ defmodule Harmony.Interval do
     end
   end
 
+  @spec from_coord(list(integer())) :: Interval.t()
   def from_coord(pc), do: from_coord(pc, false)
+
+  @spec from_coord(list(integer()), boolean()) :: Interval.t()
   def from_coord([f], fd), do: from_coord([f, 0], fd)
   def from_coord([f, o | _], true), do: [-f, -o, -1] |> Pitch.decode() |> get()
 
@@ -187,9 +224,11 @@ defmodule Harmony.Interval do
   @numbers [1, 2, 2, 3, 3, 4, 5, 5, 6, 6, 7, 7]
   @qualities ~w(P m M m M P d P m M m M)
 
+  @spec from_semitones(integer()) :: String.t()
   def from_semitones(s) when s < 0, do: from_semitones(s, -1)
   def from_semitones(s), do: from_semitones(s, 1)
 
+  @spec from_semitones(integer(), integer()) :: String.t()
   def from_semitones(semitones, dir) do
     num = abs(semitones)
     i = rem(num, 12)
@@ -199,16 +238,19 @@ defmodule Harmony.Interval do
     "#{num}#{qual}"
   end
 
+  @spec add(String.t() | Interval.t(), String.t() | Interval.t()) :: String.t()
   def add(a, b) do
     arithmetic(a, b, fn [a0, a1], [b0, b1] -> [a0 + b0, a1 + b1] end)
   end
 
+  @spec add_to(String.t() | Interval.t()) :: (String.t() | Interval.t() -> String.t())
   def add_to(a) do
     fn b ->
       arithmetic(a, b, fn [a0, a1], [b0, b1] -> [a0 + b0, a1 + b1] end)
     end
   end
 
+  @spec subtract(String.t() | Interval.t(), String.t() | Interval.t()) :: String.t()
   def subtract(a, b) do
     arithmetic(a, b, fn [a0, a1], [b0, b1] -> [a0 - b0, a1 - b1] end)
   end
