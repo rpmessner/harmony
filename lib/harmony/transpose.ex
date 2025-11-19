@@ -44,7 +44,8 @@ defmodule Harmony.Transpose do
   def transpose_by(ivl) when is_binary(ivl), do: transpose_by(Interval.get(ivl))
   def transpose_by(%Interval{} = i), do: &transpose(&1, i)
 
-  @spec transpose_fifths(String.t() | Note.t() | Interval.t(), integer() | nil) :: String.t() | nil
+  @spec transpose_fifths(String.t() | Note.t() | Interval.t(), integer() | nil) ::
+          String.t() | nil
   def transpose_fifths(_, nil), do: nil
 
   def transpose_fifths(name, f) when is_binary(name) do
