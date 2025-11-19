@@ -48,8 +48,26 @@ defmodule Harmony.Chord do
     intervals: []
   )
 
+  @type t :: %Chord{
+          empty: boolean(),
+          name: String.t(),
+          symbol: String.t(),
+          root: String.t(),
+          root_degree: integer(),
+          type: String.t(),
+          tonic: String.t(),
+          set_num: integer(),
+          quality: String.t(),
+          chroma: String.t(),
+          normalized: String.t(),
+          aliases: list(String.t()),
+          notes: list(String.t()),
+          intervals: list(String.t())
+        }
+
   @num_types ["6", "64", "7", "9", "11", "13"]
 
+  @spec tokenize(String.t()) :: list(String.t())
   def tokenize(name) when is_binary(name) do
     case Note.tokenize(name) do
       [""] -> ["", name]
@@ -62,6 +80,7 @@ defmodule Harmony.Chord do
     end
   end
 
+  @spec get(String.t()) :: Chord.t()
   def get(""), do: %Chord{}
 
   def get(name) when is_binary(name) do
@@ -70,6 +89,7 @@ defmodule Harmony.Chord do
 
   def get(%Name{empty: true}), do: %Chord{}
 
+  @spec get(String.t(), String.t()) :: Chord.t()
   def get(name, ""), do: do_get(Name.get(name))
 
   def get(name, tonic) when is_binary(name) and is_binary(tonic) do
@@ -79,6 +99,7 @@ defmodule Harmony.Chord do
     do_get({chord_name, name}, tonic_note)
   end
 
+  @spec get(String.t(), String.t(), String.t()) :: Chord.t()
   def get(name, tonic, root) when is_binary(name) and is_binary(tonic) and is_binary(root) do
     chord_name = Name.get(name)
     tonic_note = Note.get(tonic)
@@ -192,6 +213,7 @@ defmodule Harmony.Chord do
     end
   end
 
+  @spec chord_scales(String.t()) :: list(String.t())
   def chord_scales(symbol) do
     %{chroma: chroma} = get(symbol)
 
@@ -202,6 +224,7 @@ defmodule Harmony.Chord do
     |> Enum.map(& &1.name)
   end
 
+  @spec transpose(String.t(), String.t()) :: String.t()
   def transpose(chord_name, interval) do
     [tonic, type] = tokenize(chord_name)
 
@@ -212,6 +235,7 @@ defmodule Harmony.Chord do
     end
   end
 
+  @spec extended(String.t()) :: list(String.t())
   def extended(chord_name) do
     %{chroma: chroma, tonic: tonic} = get(chord_name)
     is_superset = ClassSet.is_superset_of(chroma)
@@ -221,6 +245,7 @@ defmodule Harmony.Chord do
     |> Enum.map(&"#{tonic}#{&1.aliases |> List.first()}")
   end
 
+  @spec reduced(String.t()) :: list(String.t())
   def reduced(chord_name) do
     %{chroma: chroma, tonic: tonic} = get(chord_name)
     is_subset = ClassSet.is_subset_of(chroma)
