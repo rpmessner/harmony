@@ -23,6 +23,7 @@ defmodule Harmony.Transpose do
   alias Harmony.Interval
   alias Harmony.Note
 
+  @spec transpose(String.t() | Note.t(), String.t() | Interval.t()) :: String.t()
   def transpose(name, ivl) when is_binary(name) or is_binary(ivl),
     do: transpose(Note.get(name), Interval.get(ivl))
 
@@ -35,12 +36,15 @@ defmodule Harmony.Transpose do
   def transpose(%Note{coord: [n0, n1]}, %Interval{coord: [i0, i1 | _]}),
     do: Note.from_coord([n0 + i0, n1 + i1]).name
 
+  @spec transpose_from(String.t() | Note.t()) :: (String.t() | Interval.t() -> String.t())
   def transpose_from(note) when is_binary(note), do: transpose_from(Note.get(note))
   def transpose_from(%Note{} = n), do: &transpose(n, &1)
 
+  @spec transpose_by(String.t() | Interval.t()) :: (String.t() | Note.t() -> String.t())
   def transpose_by(ivl) when is_binary(ivl), do: transpose_by(Interval.get(ivl))
   def transpose_by(%Interval{} = i), do: &transpose(&1, i)
 
+  @spec transpose_fifths(String.t() | Note.t() | Interval.t(), integer() | nil) :: String.t() | nil
   def transpose_fifths(_, nil), do: nil
 
   def transpose_fifths(name, f) when is_binary(name) do
