@@ -53,6 +53,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Comprehensive `@spec` type annotations for all public API functions (61 specs total)
+  - `Harmony.Note` - 16 function specs including get, from_midi, from_freq, enharmonic
+  - `Harmony.Interval` - 13 function specs including get, distance, invert, add
+  - `Harmony.Transpose` - 3 function specs for transpose operations
+  - `Harmony.Chord` - 7 function specs including get, chord_scales, transpose
+  - `Harmony.Scale` - 6 function specs including get, chords, modes
+- Type definitions (`@type t`) for Interval, Chord, and Scale modules
+- Macro performance benchmark script (`benchmark_macro_vs_runtime.exs`)
+- Macro performance analysis documentation (`MACRO_ANALYSIS.md`)
+
+### Documentation
+- Detailed macro vs runtime performance analysis showing 242x speedup
+- Benchmark results demonstrating compile-time generation benefits
+- Trade-off analysis for macro-based architecture
+- Recommendations for type system adoption strategy
+
+### Improved
+- Better IDE support through type annotations
+- Enhanced Dialyzer type checking capabilities
+- Improved API documentation through specs
+
 ### Future Enhancements
 - Voice leading algorithms
 - Chord voicing generation
