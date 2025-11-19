@@ -1,5 +1,6 @@
 defmodule Harmony.Chord.NameTest do
-  use ExUnit.Case, async: true
+  # These tests mutate shared GenServer state, so they cannot run async
+  use ExUnit.Case, async: false
 
   alias Harmony.Chord.Name, as: Subject
   alias Harmony.Chord.Data
