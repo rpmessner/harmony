@@ -10,11 +10,11 @@ defmodule Harmony.Pitch do
   )
 
   @type t :: %Pitch{
-    step: integer(),
-    alt: integer(),
-    oct: integer() | nil,
-    dir: integer() | nil
-  }
+          step: integer(),
+          alt: integer(),
+          oct: integer() | nil,
+          dir: integer() | nil
+        }
 
   @types ~w(P M M P P M M)
   @fifths [0, 2, 4, -1, 1, 3, 5]

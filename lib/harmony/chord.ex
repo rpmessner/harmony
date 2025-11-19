@@ -1,4 +1,28 @@
 defmodule Harmony.Chord do
+  @moduledoc """
+  Functions for working with musical chords.
+
+  Chords are collections of notes played together. This module provides functionality
+  for chord recognition, generation, analysis, and finding compatible scales.
+
+  ## Examples
+
+      # Get a chord
+      iex> chord = Harmony.Chord.get("Cmaj7")
+      iex> chord.notes
+      ["C", "E", "G", "B"]
+
+      # Find compatible scales
+      iex> Harmony.Chord.chord_scales("Dm7")
+      ["dorian", "minor", "minor pentatonic", ...]
+
+      # Transpose a chord
+      iex> Harmony.Chord.transpose("Cmaj7", "5P")
+      "Gmaj7"
+
+  See the [Chords guide](docs/chords.md) for detailed documentation.
+  """
+
   alias Harmony.Note
   alias Harmony.Interval
   alias Harmony.Pitch.ClassSet

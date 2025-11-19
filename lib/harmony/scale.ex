@@ -1,4 +1,29 @@
 defmodule Harmony.Scale do
+  @moduledoc """
+  Functions for working with musical scales.
+
+  Scales are ordered collections of notes. This module provides functionality for
+  scale generation, mode calculation, finding compatible chords, and generating
+  scale ranges with proper enharmonic spelling.
+
+  ## Examples
+
+      # Get a scale
+      iex> scale = Harmony.Scale.get("C major")
+      iex> scale.notes
+      ["C", "D", "E", "F", "G", "A", "B"]
+
+      # Get all modes
+      iex> Harmony.Scale.modes("C major")
+      [["C", "major"], ["D", "dorian"], ["E", "phrygian"], ...]
+
+      # Find compatible chords
+      iex> Harmony.Scale.chords("D dorian")
+      ["m", "m7", "m9", "m11", ...]
+
+  See the [Scales guide](docs/scales.md) for detailed documentation.
+  """
+
   alias Harmony.Util
   alias Harmony.Scale.Name
   alias Harmony.Chord.Name, as: ChordName

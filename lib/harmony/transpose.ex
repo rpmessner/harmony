@@ -1,4 +1,25 @@
 defmodule Harmony.Transpose do
+  @moduledoc """
+  Functions for transposing notes and intervals.
+
+  Transposition moves a note up or down by a specified interval, maintaining proper
+  enharmonic spelling. This module provides both direct transposition and functional
+  composition patterns.
+
+  ## Examples
+
+      # Transpose a note by an interval
+      iex> Harmony.Transpose.transpose("C4", "5P")
+      "G4"
+
+      # Create a reusable transposer
+      iex> up_fifth = Harmony.Transpose.transpose_by("5P")
+      iex> up_fifth.("C")
+      "G"
+
+  See the [Transposition guide](docs/transpose.md) for detailed documentation.
+  """
+
   alias Harmony.Interval
   alias Harmony.Note
 

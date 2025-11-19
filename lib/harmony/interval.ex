@@ -62,6 +62,31 @@ defmodule Harmony.Interval.Macros do
 end
 
 defmodule Harmony.Interval do
+  @moduledoc """
+  Functions for working with musical intervals.
+
+  Intervals represent the distance between two notes. This module provides functionality
+  for creating, manipulating, and calculating intervals using standard music notation
+  (e.g., "5P" for perfect fifth, "3M" for major third).
+
+  ## Examples
+
+      # Get an interval
+      iex> interval = Harmony.Interval.get("5P")
+      iex> interval.semitones
+      7
+
+      # Calculate distance between notes
+      iex> Harmony.Interval.distance("C", "G")
+      "5P"
+
+      # Invert an interval
+      iex> Harmony.Interval.invert("3M")
+      "6m"
+
+  See the [Intervals guide](docs/intervals.md) for detailed documentation.
+  """
+
   alias __MODULE__
   alias Harmony.{Note, Pitch, RomanNumeral}
   alias Harmony.Interval.Macros

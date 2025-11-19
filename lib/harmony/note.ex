@@ -95,6 +95,33 @@ defmodule Harmony.Note.Macros do
 end
 
 defmodule Harmony.Note do
+  @moduledoc """
+  Functions for working with musical notes and pitch classes.
+
+  Notes are the fundamental building blocks of music. This module provides comprehensive
+  functionality for creating, manipulating, and analyzing musical notes including their
+  pitch class, octave, MIDI number, frequency, and more.
+
+  ## Examples
+
+      # Get a note
+      iex> note = Harmony.Note.get("C4")
+      iex> note.midi
+      60
+      iex> note.freq
+      261.6255653005986
+
+      # Create from MIDI
+      iex> Harmony.Note.from_midi(60).name
+      "C4"
+
+      # Simplify notes
+      iex> Harmony.Note.simplify("B#4")
+      "C5"
+
+  See the [Notes guide](docs/notes.md) for detailed documentation.
+  """
+
   alias __MODULE__
   alias Harmony.Note.Macros
   alias Harmony.Pitch
@@ -119,22 +146,22 @@ defmodule Harmony.Note do
   )
 
   @type t :: %Note{
-    empty: boolean,
-    alt: integer(),
-    acc: String.t(),
-    chroma: integer(),
-    coord: list(integer()),
-    freq: float(),
-    height: integer(),
-    letter: String.t(),
-    midi: integer(),
-    name: String.t(),
-    note: String.t(),
-    oct: integer(),
-    pc: String.t(),
-    simple: String.t(),
-    step: integer()
-  }
+          empty: boolean,
+          alt: integer(),
+          acc: String.t(),
+          chroma: integer(),
+          coord: list(integer()),
+          freq: float(),
+          height: integer(),
+          letter: String.t(),
+          midi: integer(),
+          name: String.t(),
+          note: String.t(),
+          oct: integer(),
+          pc: String.t(),
+          simple: String.t(),
+          step: integer()
+        }
 
   require Macros
   Macros.note_defs()
