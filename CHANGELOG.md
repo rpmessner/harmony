@@ -70,10 +70,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Trade-off analysis for macro-based architecture
 - Recommendations for type system adoption strategy
 
+### Fixed
+- Dialyzer type checking errors (6 issues resolved):
+  - Added RomanNumeral.t() type definition
+  - Removed unreachable pattern in Interval.invert/1
+  - Fixed Note.t() to allow nil for midi, freq, and oct fields
+  - Fixed Scale nil checks to use empty field instead of height
+- All Dialyzer checks now pass cleanly
+
 ### Improved
 - Better IDE support through type annotations
 - Enhanced Dialyzer type checking capabilities
 - Improved API documentation through specs
+- More accurate type definitions matching runtime behavior
 
 ### Future Enhancements
 - Voice leading algorithms
