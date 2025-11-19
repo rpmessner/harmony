@@ -7,14 +7,14 @@ defmodule Harmony.TransposeTest do
     # interval
     assert "8P" = Transpose.transpose_fifths("4P", 1)
     assert ~w(1P 5P 9M 13M 17M) = 0..4 |> Enum.map(&Transpose.transpose_fifths("1P", &1))
-    assert ~w(1P -5P -9M -13M -17M) = 0..-4 |> Enum.map(&Transpose.transpose_fifths("1P", &1))
+    assert ~w(1P -5P -9M -13M -17M) = 0..-4//-1 |> Enum.map(&Transpose.transpose_fifths("1P", &1))
 
     # note
     assert "E6" = Transpose.transpose_fifths("G4", 3)
     assert "E" = Transpose.transpose_fifths("G", 3)
     assert ~w(C2 G2 D3 A3 E4 B4) = 0..5 |> Enum.map(&Transpose.transpose_fifths("C2", &1))
     assert ~w(F# C# G# D# A# E# B#) = 0..6 |> Enum.map(&Transpose.transpose_fifths("F#", &1))
-    assert ~w(Bb Eb Ab Db Gb Cb Fb) = 0..-6 |> Enum.map(&Transpose.transpose_fifths("Bb", &1))
+    assert ~w(Bb Eb Ab Db Gb Cb Fb) = 0..-6//-1 |> Enum.map(&Transpose.transpose_fifths("Bb", &1))
   end
 
   test "transpose" do

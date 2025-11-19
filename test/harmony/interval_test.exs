@@ -75,10 +75,10 @@ defmodule Harmony.IntervalTest do
              Enum.to_list(12..23) |> Enum.map(&Interval.from_semitones/1)
 
     assert ~w(1P -2m -2M -3m -3M -4P -5d -5P -6m -6M -7m -7M) =
-             Enum.to_list(0..-11) |> Enum.map(&Interval.from_semitones/1)
+             Enum.to_list(0..-11//-1) |> Enum.map(&Interval.from_semitones/1)
 
     assert ~w(-8P -9m -9M -10m -10M -11P -12d -12P -13m -13M -14m -14M) =
-             Enum.to_list(-12..-23) |> Enum.map(&Interval.from_semitones/1)
+             Enum.to_list(-12..-23//-1) |> Enum.map(&Interval.from_semitones/1)
   end
 
   test "add" do
