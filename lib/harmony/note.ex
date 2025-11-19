@@ -172,60 +172,88 @@ defmodule Harmony.Note do
   def get(%Pitch{} = p), do: p |> Pitch.note_name() |> get()
   def get(_), do: %Note{}
 
+  @spec simple(Note.t() | String.t() | atom()) :: String.t()
   def simple(note), do: get(note).simple
+
+  @spec octave(Note.t() | String.t() | atom()) :: integer() | nil
   def octave(note), do: get(note).oct
+
+  @spec simplify(Note.t() | String.t() | atom()) :: String.t()
   def simplify(note), do: get(note).simple
+
+  @spec name(Note.t() | String.t() | atom()) :: String.t()
   def name(note), do: get(note).name
+
+  @spec pitch_class(Note.t() | String.t() | atom()) :: String.t()
   def pitch_class(note), do: get(note).pc
+
+  @spec chroma(Note.t() | String.t() | atom()) :: integer()
   def chroma(note), do: get(note).chroma
+
+  @spec midi(Note.t() | String.t() | atom()) :: integer() | nil
   def midi(note), do: get(note).midi
+
+  @spec freq(Note.t() | String.t() | atom()) :: float() | nil
   def freq(note), do: get(note).freq
+
+  @spec height(Note.t() | String.t() | atom()) :: integer()
   def height(note), do: get(note).height
 
+  @spec names() :: list(String.t())
   def names, do: ~w(C D E F G A B)
 
+  @spec names(list(Note.t() | String.t() | atom())) :: list(String.t())
   def names(notes) do
     notes
     |> Enum.map(&get(&1).name)
     |> Enum.filter(&(&1 != ""))
   end
 
+  @spec from_midi(integer() | nil) :: Note.t()
   def from_midi(nil), do: %Note{}
 
+  @spec from_freq(float() | nil) :: Note.t()
   def from_freq(nil), do: %Note{}
   def from_freq(freq) when abs(freq) == 0.0, do: %Note{}
   def from_freq(freq), do: freq |> Util.freq_to_midi() |> from_midi()
 
+  @spec from_freq_sharp(float() | nil) :: Note.t()
   def from_freq_sharp(nil), do: %Note{}
   def from_freq_sharp(freq) when abs(freq) == 0.0, do: %Note{}
   def from_freq_sharp(freq), do: freq |> Util.freq_to_midi() |> from_midi_sharp()
 
+  @spec from_coord(list(integer())) :: Note.t()
   def from_coord(coord) when is_list(coord), do: coord |> Pitch.decode() |> get()
 
+  @spec sorted_names(list(Note.t() | String.t() | atom())) :: list(String.t())
   def sorted_names(notes) do
     notes
     |> names()
     |> Enum.sort(&(get(&1).height <= get(&2).height))
   end
 
+  @spec sorted_names(list(Note.t() | String.t() | atom()), :desc) :: list(String.t())
   def sorted_names(notes, :desc) do
     notes
     |> names()
     |> Enum.sort(&(get(&1).height >= get(&2).height))
   end
 
+  @spec sorted_uniq_names(list(Note.t() | String.t() | atom())) :: list(String.t())
   def sorted_uniq_names(notes) do
     notes
     |> sorted_names()
     |> Enum.uniq()
   end
 
+  @spec sorted_uniq_names(list(Note.t() | String.t() | atom()), :desc) :: list(String.t())
   def sorted_uniq_names(notes, :desc) do
     notes
     |> sorted_names(:desc)
     |> Enum.uniq()
   end
 
+  @spec enharmonic(Note.t() | String.t()) :: String.t()
   def enharmonic(src) when is_binary(src), do: src |> get() |> enharmonic()
 
   def enharmonic(%Note{midi: nil, alt: alt} = src) when alt < 0,
@@ -240,6 +268,7 @@ defmodule Harmony.Note do
   def enharmonic(%Note{} = src),
     do: enharmonic(src, from_midi(src.midi).pc |> get())
 
+  @spec enharmonic(Note.t() | String.t(), Note.t() | String.t()) :: String.t()
   def enharmonic(src, dest) when is_binary(src) or is_binary(dest),
     do: enharmonic(get(src), get(dest))
 
@@ -265,6 +294,7 @@ defmodule Harmony.Note do
 
   @noteregex ~r/^([a-gA-G]?)(\#{1,}|b{1,}|x{1,}|)(-?\d*)\s*(.*)$/
 
+  @spec tokenize(String.t() | any()) :: list(String.t())
   def tokenize(str) when is_binary(str) do
     [[_, m1, m2, m3, m4]] = Regex.scan(@noteregex, str)
     [String.upcase(m1), String.replace(m2, ~r/x/, "##"), m3, m4]
