@@ -85,7 +85,7 @@ defmodule Harmony.Chord.NameTest do
   test "all chords must have abbreviations" do
     Data.data()
     |> Enum.each(fn {_, _, abbrevs} ->
-      assert length(abbrevs) > 0
+      assert abbrevs != []
     end)
   end
 
