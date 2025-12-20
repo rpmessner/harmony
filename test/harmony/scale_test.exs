@@ -166,4 +166,56 @@ defmodule Harmony.ScaleTest do
     range = Subject.range_of(~w(c4 g4 db3 g))
     assert range.("c4", "c5") == ~w(C4 Db4 G4 C5)
   end
+
+  describe "scale_transpose/3" do
+    test "transpose forward in C major" do
+      assert Subject.scale_transpose("C major", 0, "C4") == "C4"
+      assert Subject.scale_transpose("C major", 2, "C4") == "E4"
+      assert Subject.scale_transpose("C major", 1, "E4") == "F4"
+      assert Subject.scale_transpose("C major", 7, "C4") == "C5"
+    end
+
+    test "transpose backward in C major" do
+      assert Subject.scale_transpose("C major", -1, "C4") == "B3"
+      assert Subject.scale_transpose("C major", -2, "C4") == "A3"
+      assert Subject.scale_transpose("C major", -7, "C4") == "C3"
+    end
+
+    test "transpose forward in A minor (non-C root)" do
+      assert Subject.scale_transpose("A minor", 0, "A3") == "A3"
+      assert Subject.scale_transpose("A minor", 1, "A3") == "B3"
+      # Crosses octave boundary at B->C
+      assert Subject.scale_transpose("A minor", 2, "A3") == "C4"
+      assert Subject.scale_transpose("A minor", 3, "A3") == "D4"
+      assert Subject.scale_transpose("A minor", 7, "A3") == "A4"
+    end
+
+    test "transpose backward in A minor" do
+      # Going backward from A doesn't cross B->C boundary
+      assert Subject.scale_transpose("A minor", -1, "A3") == "G3"
+      assert Subject.scale_transpose("A minor", -2, "A3") == "F3"
+      assert Subject.scale_transpose("A minor", -5, "A3") == "C3"
+      # Going from A to B crosses B->C boundary going backward
+      assert Subject.scale_transpose("A minor", -6, "A3") == "B2"
+      assert Subject.scale_transpose("A minor", -7, "A3") == "A2"
+    end
+
+    test "transpose from middle of scale" do
+      assert Subject.scale_transpose("A minor", 2, "B3") == "D4"
+      assert Subject.scale_transpose("A minor", -1, "C4") == "B3"
+      assert Subject.scale_transpose("C major", 6, "D4") == "C5"
+    end
+
+    test "returns nil for note not in scale" do
+      assert Subject.scale_transpose("C major", 2, "C#4") == nil
+    end
+
+    test "returns nil for invalid scale" do
+      assert Subject.scale_transpose("invalid scale", 2, "C4") == nil
+    end
+
+    test "returns nil for invalid note" do
+      assert Subject.scale_transpose("C major", 2, "invalid") == nil
+    end
+  end
 end
