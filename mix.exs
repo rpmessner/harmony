@@ -1,7 +1,7 @@
 defmodule Harmony.MixProject do
   use Mix.Project
 
-  @version "0.1.2"
+  @version "0.2.0"
   @source_url "https://github.com/rpmessner/harmony"
 
   def project do
@@ -97,7 +97,9 @@ defmodule Harmony.MixProject do
         Harmony.Pitch.ClassSet.Macros,
         # GenServer state modules - internal implementation details
         Harmony.Chord.Name.State,
-        Harmony.Scale.Name.State
+        Harmony.Scale.Name.State,
+        # Internal utility module - tested indirectly through public API
+        Harmony.Util
       ]
     ]
   end
