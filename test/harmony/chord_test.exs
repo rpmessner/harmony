@@ -217,4 +217,38 @@ defmodule Harmony.ChordTest do
   test "reduced" do
     assert Subject.reduced("CMaj7") == ["C5", "CM"]
   end
+
+  describe "root_note/1" do
+    test "extracts root from common chord symbols" do
+      assert Subject.root_note("Am7") == "A"
+      assert Subject.root_note("Cmaj7") == "C"
+      assert Subject.root_note("Dm") == "D"
+      assert Subject.root_note("G7") == "G"
+    end
+
+    test "handles flat accidentals" do
+      assert Subject.root_note("Bbmaj7") == "Bb"
+      assert Subject.root_note("Ebm7") == "Eb"
+      assert Subject.root_note("Db7") == "Db"
+    end
+
+    test "handles sharp accidentals" do
+      assert Subject.root_note("F#m7b5") == "F#"
+      assert Subject.root_note("C#m") == "C#"
+      assert Subject.root_note("G#7") == "G#"
+    end
+
+    test "handles simple triads" do
+      assert Subject.root_note("C") == "C"
+      assert Subject.root_note("Am") == "A"
+      assert Subject.root_note("Bb") == "Bb"
+    end
+
+    test "returns nil for invalid symbols" do
+      assert Subject.root_note("invalid") == nil
+      assert Subject.root_note("aug") == nil
+      assert Subject.root_note("dim") == nil
+      assert Subject.root_note("") == nil
+    end
+  end
 end

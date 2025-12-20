@@ -254,4 +254,78 @@ defmodule Harmony.Chord do
     |> Enum.filter(&is_subset.(&1.chroma))
     |> Enum.map(&"#{tonic}#{&1.aliases |> List.first()}")
   end
+
+  @doc """
+  Get the primary (most common) scale for a chord symbol.
+
+  Returns a scale name string like "C dorian" based on jazz chord-scale
+  relationships. Uses `chord_scales/1` and prioritizes common jazz scales.
+
+  ## Examples
+
+      iex> Harmony.Chord.primary_scale("Cm7")
+      "C dorian"
+
+      iex> Harmony.Chord.primary_scale("F7")
+      "F mixolydian"
+
+      iex> Harmony.Chord.primary_scale("Bbmaj7")
+      "Bb major"
+
+      iex> Harmony.Chord.primary_scale("Am7b5")
+      "A locrian"
+  """
+  @spec primary_scale(String.t()) :: String.t()
+  def primary_scale(chord_symbol) when is_binary(chord_symbol) do
+    case get(chord_symbol) do
+      %Chord{empty: true} ->
+        "C major"
+
+      %Chord{tonic: tonic} ->
+        scales = chord_scales(chord_symbol)
+        scale_type = pick_primary_scale(scales)
+        "#{tonic} #{scale_type}"
+    end
+  end
+
+  # Priority order for jazz chord-scale relationships
+  @preferred_scales ["locrian", "mixolydian", "dorian", "major", "lydian", "minor"]
+
+  defp pick_primary_scale(scales) do
+    Enum.find_value(@preferred_scales, "major", fn preferred ->
+      if Enum.member?(scales, preferred), do: preferred
+    end)
+  end
+
+  @doc """
+  Extract the root note from a chord symbol.
+
+  Returns just the root pitch class (letter + optional accidental).
+  Returns nil for invalid chord symbols.
+
+  ## Examples
+
+      iex> Harmony.Chord.root_note("Am7")
+      "A"
+
+      iex> Harmony.Chord.root_note("Bbmaj7")
+      "Bb"
+
+      iex> Harmony.Chord.root_note("F#m7b5")
+      "F#"
+
+      iex> Harmony.Chord.root_note("Cmaj7")
+      "C"
+
+      iex> Harmony.Chord.root_note("invalid")
+      nil
+  """
+  @spec root_note(String.t()) :: String.t() | nil
+  def root_note(chord_symbol) when is_binary(chord_symbol) do
+    case tokenize(chord_symbol) do
+      ["", _type] -> nil
+      [root, _type] when root != "" -> root
+      _ -> nil
+    end
+  end
 end
